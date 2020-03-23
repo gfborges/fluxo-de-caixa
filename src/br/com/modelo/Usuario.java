@@ -1,12 +1,21 @@
 package br.com.modelo;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+
 public class Usuario {
+	public static final String ARQUIVO_USUARIOS = "usuarios.csv";
+	
 	private final String LOGIN;
 	private final String SENHA;
 	private String caixa;
 	
 	private String nome;
 	private String email;
+	private boolean tipo; // PJ (T) / PF (F)
 	
 	private Telefone tel;
 	private Endereco endereco;
@@ -69,4 +78,24 @@ public class Usuario {
 		return SENHA;
 	}
 	
+	public void toCSV() throws IOException {
+		boolean saving = true;
+		String line  = LOGIN + "," +
+					   SENHA + "," +
+					   caixa + "," +
+					   nome + "," +
+					   email + "," +
+					   tel.getNumero() + "," +
+					   endereco.toCSV() + "\n";
+		while(saving) {
+			try {
+				Files.write(Paths.get(ARQUIVO_USUARIOS), line.getBytes(), StandardOpenOption.APPEND);
+			}catch(IOException  e) {
+				FileWriter file = new FileWriter(ARQUIVO_USUARIOS);
+				file.close();
+				saving = !saving;
+			}
+			saving = !saving;
+		}
+	}
 }
