@@ -1,18 +1,64 @@
 package br.com.negocio;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+
 import br.com.modelo.Caixa;
 import br.com.modelo.Entrada;
 import br.com.modelo.Saida;
 import br.com.modelo.Transacao;
-import br.com.negocio.Controle;
+import br.com.modelo.Usuario;
 
 public class Menu {
+	private final String ARQUIVO_USUARIOS;
 	private Controle ctrl;
+	private String caixa;
+	private String tipo_user;
 	
 	public Menu() {
 		this.ctrl = new Controle();
+		this.ARQUIVO_USUARIOS = Usuario.ARQUIVO_USUARIOS;
+	}
+	
+	public boolean login(String login, String senha) throws IOException {
+		BufferedReader arquivo;
+		try {
+			arquivo = new BufferedReader( new FileReader(ARQUIVO_USUARIOS) );
+		}catch(IOException e) {
+			System.out.println("Não existem usuários para fazer login, por favor cadastre-se");
+			// menu.cadastrar()
+			return false;
+		}
+		String line = arquivo.readLine();
+		while(line  != null) {
+			String[] row = line.split(",");
+			if ( row[0].equals(login) && row[1].equals(senha) ) {
+				arquivo.close();
+				return true;
+			}
+			line = arquivo.readLine();
+		}
+		arquivo.close();
+		return false;
+	}
+	
+	public boolean login() throws IOException {
+		String login, senha;
+		// Login
+		do {
+			System.out.print("Login: ");
+			login = ctrl.texto();
+		}while(login.isEmpty());
+		// Senha
+		do {
+			System.out.print("Senha: ");
+			senha = ctrl.texto();
+		}while(senha.isEmpty());
+		
+		return login(login, senha);
 	}
 	
 	public int menu() {
@@ -180,6 +226,24 @@ public class Menu {
 	
 	public void sair() {
 		System.exit(0);
+	}
+	
+	public boolean confirmarS(String msg) {
+		int op = -1;
+		do {
+			System.out.print(msg+"(S/n)? ");
+			op = ctrl.bool_int(true);
+		}while(op < 0);
+		return op == 1;
+	}
+	
+	public boolean confirmarN(String msg) {
+		int op = -1;
+		do {
+			System.out.print(msg+"(s/N)? ");
+			op = ctrl.bool_int(false);
+		}while(op < 0);
+		return  op == 1;
 	}
 	
 	public void relatorio(Caixa caixa) {
