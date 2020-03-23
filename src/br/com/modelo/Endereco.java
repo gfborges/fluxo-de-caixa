@@ -56,4 +56,12 @@ public class Endereco {
 		this.complemento = complemento;
 	}
 	
+	public String toCSV() {
+		String line = cidade + "," +
+					  bairro + "," +
+					  rua + "," +
+					  numero + "," +
+					  complemento;
+		return line;
+	}
 }
