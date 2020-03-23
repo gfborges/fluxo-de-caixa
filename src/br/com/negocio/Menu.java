@@ -42,7 +42,8 @@ public class Menu {
 		
 		nome = ler_campo_obg("(*)Nome: ");
 		email = ler_campo_obg("(*)E-mail: ");
-		tipo = ler_tipo(Usuario.TIPOS);
+		
+		tipo = ler_tipo_int(Usuario.TIPOS);
 		
 		telefone = ler_telefone();
 		
@@ -104,7 +105,7 @@ public class Menu {
 		// Login
 		login = ler_campo_obg("Login: ");
 		// Senha
-		senha = ler_campo_obg("Senha: ");
+		senha = ler_senha();
 		
 		return login(login, senha);
 	}
@@ -145,6 +146,10 @@ public class Menu {
 			login = ctrl.texto();
 		}while(!validar_login(login));
 		return login;
+	}
+	
+	private String ler_senha() {
+		return ctrl.senha("Senha: ");
 	}
 	
 	private boolean validar_login(String login) throws IOException {
@@ -194,15 +199,23 @@ public class Menu {
 		return tel;
 	}
 	
-	private int ler_tipo(String[] opcoes) {
-		int tipo;
+	private int ler_tipo_int(String[] opcoes) {
+		int tipo = 0;
 		do {
 			System.out.println("Escolha um dos tipos a seguir:");
-			Transacao.listar_tipos(opcoes); // lista comecando do 1
+			
+			for(String opcao : opcoes) {
+				System.out.printf(" [%d] %s\n", ++tipo, opcao);
+			}
+			
 			System.out.print("Tipo: ");
 			tipo = ctrl.opcao();
 		}while(tipo <= 0 || tipo > opcoes.length );
 		return tipo - 1; // indice comeca do 0
+	}
+	
+	private String ler_tipo(String[] opcoes) {
+		return opcoes[ ler_tipo_int(opcoes) ];
 	}
 	
 	private double ler_valor() {
@@ -280,14 +293,16 @@ public class Menu {
 	}
 	
 	public void nova_entrada(Caixa caixa) {
-		String data, ano, mes, semana;
+		String data, ano, mes, semana, tipo;
 		LocalDate dt = LocalDate.now();
-		int tipo = -1;
 		double valor = -1;
 		System.out.println("Por favor preencha todos os campos");
 		
 		// Tipo
-		tipo = ler_tipo(Entrada.TIPOS);
+		if(usuario.isPf())
+			tipo = ler_tipo(Entrada.TIPOS_PF);
+		else 
+			tipo = ler_tipo(Entrada.TIPOS_PJ);
 		
 		// Valor
 		valor = ler_valor();
@@ -311,12 +326,15 @@ public class Menu {
 	public void nova_saida(Caixa caixa) {
 		String data, ano, mes, semana;
 		LocalDate dt = LocalDate.now();
-		int tipo = -1;
+		String tipo;
 		double valor = -1;
 		System.out.println("Por favor preencha todos os campos a seguir");
 		
 		// Tipo
-		tipo = ler_tipo(Saida.TIPOS);
+		if(usuario.isPf())
+			tipo = ler_tipo(Saida.TIPOS_PF);
+		else
+			tipo = ler_tipo(Saida.TIPOS_PJ);
 		
 		// Valor
 		valor = ler_valor();

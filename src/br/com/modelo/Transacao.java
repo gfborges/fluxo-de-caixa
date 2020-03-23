@@ -53,12 +53,6 @@ public class Transacao{
 	    return valor;
 	  }
 	  
-	  public static void listar_tipos(String[] opcoes) {
-		  for(int i = 0; i < opcoes.length; ++i) {
-			  System.out.printf(" [%d] %s\n", i+1, opcoes[i]);
-		  }
-	  }
-	  
 	  public boolean equals(Object o) {
 		  if(o == this)
 			  return true;
