@@ -41,4 +41,8 @@ public class Controle {
 			return in.startsWith("s") ? 1 : 0;
 		return -1;
 	}
+	
+	public static String attrOuEspaco(String attr) {
+		return (attr.isEmpty())? " ": attr;
+	}
 }
