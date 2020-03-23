@@ -1,15 +1,16 @@
 package br.com.modelo;
 
 public class Entrada extends Transacao{
-	  public final static String[] TIPOS =  {"Salario", "Receita de vendas", "Investimento"};
-
-	  public Entrada(String data, double valor, int tipo){
-	    super(data, valor, true, Entrada.TIPOS[tipo]);
-	  }
+	public static final String[] TIPOS_PF = {"Salario", "Investimento"};
+	public static final String[] TIPOS_PJ = {"Receita de vendas", "Investimento"};
+	
+	public Entrada(String data, double valor, String tipo){
+		super(data, valor, true, tipo);
+	}
 	  
-	  @Override
-	  public String toString() {
-	    return " + " + super.toString();
-	  }
-}
+	@Override
+	public String toString() {
+		return " + " + super.toString();
+		}
+	}
 
