@@ -7,40 +7,94 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
 import br.com.modelo.Caixa;
+import br.com.modelo.Endereco;
 import br.com.modelo.Entrada;
 import br.com.modelo.Saida;
+import br.com.modelo.Telefone;
 import br.com.modelo.Transacao;
 import br.com.modelo.Usuario;
 
 public class Menu {
 	private final String ARQUIVO_USUARIOS;
 	private Controle ctrl;
-	private String caixa;
-	private String tipo_user;
+	public Usuario usuario;
 	
 	public Menu() {
 		this.ctrl = new Controle();
 		this.ARQUIVO_USUARIOS = Usuario.ARQUIVO_USUARIOS;
 	}
 	
+	public void cadastrar() throws IOException {
+		String login, senha, caixa;
+		String nome, email, telefone;
+		String cidade,
+			   bairro,
+			   rua,
+			   numero,
+			   complemento;
+		int tipo;
+		
+		System.out.println("Os campos com (*) são obrigatótrios");
+		
+		login = ler_login();
+		senha = ler_campo_obg("(*)Senha: ");
+		caixa = login + ".csv";
+		
+		nome = ler_campo_obg("(*)Nome: ");
+		email = ler_campo_obg("(*)E-mail: ");
+		tipo = ler_tipo(Usuario.TIPOS);
+		
+		telefone = ler_telefone();
+		
+		cidade = ler_campo("Cidade: ");
+		bairro = ler_campo("Bairro: ");
+		rua = ler_campo("Rua: ");
+		numero = ler_campo("Numero: ");
+		complemento = ler_campo("Complemento: ");
+		
+		Telefone tel = new Telefone(telefone);
+		Endereco end = new Endereco(cidade, bairro, rua, numero, complemento);
+		Usuario user = new Usuario(login, senha, caixa, nome, email, tipo, tel, end);
+		
+		user.toCSV();
+		
+		login(login, senha);
+	}
+	public boolean init(String[] args) throws IOException {
+		if( args.length >= 2 && login(args[0], args[1])) {
+				return true;
+		}
+		else if(confirmarN("Deseja efetuar cadastro")) {
+				cadastrar();
+				
+				System.out.println("\nVocê pode logar durante a execução do programa");
+				System.out.println("Uso: java -jar caixa.jar <login> <senha>\n");
+				return true;
+		}
+		return login();
+	}
 	public boolean login(String login, String senha) throws IOException {
 		BufferedReader arquivo;
 		try {
 			arquivo = new BufferedReader( new FileReader(ARQUIVO_USUARIOS) );
 		}catch(IOException e) {
 			System.out.println("Não existem usuários para fazer login, por favor cadastre-se");
-			// menu.cadastrar()
+			if( confirmarS("Deseja efetuar cadastro?") )
+				cadastrar();
 			return false;
 		}
 		String line = arquivo.readLine();
 		while(line  != null) {
 			String[] row = line.split(",");
 			if ( row[0].equals(login) && row[1].equals(senha) ) {
+				usuario = Usuario.fromCSV(row);
+				System.out.println("Login efetuado com sucesso, " + usuario.getNome());
 				arquivo.close();
 				return true;
 			}
 			line = arquivo.readLine();
 		}
+		System.out.println("Login ou senha inválidos");
 		arquivo.close();
 		return false;
 	}
@@ -48,15 +102,9 @@ public class Menu {
 	public boolean login() throws IOException {
 		String login, senha;
 		// Login
-		do {
-			System.out.print("Login: ");
-			login = ctrl.texto();
-		}while(login.isEmpty());
+		login = ler_campo_obg("Login: ");
 		// Senha
-		do {
-			System.out.print("Senha: ");
-			senha = ctrl.texto();
-		}while(senha.isEmpty());
+		senha = ler_campo_obg("Senha: ");
 		
 		return login(login, senha);
 	}
@@ -74,6 +122,76 @@ public class Menu {
 		System.out.println(" [0] Sair");
 		System.out.print("Selecione uma opçao: ");
 		return ctrl.opcao();
+	}
+	
+	private String ler_campo(String msg) {
+		System.out.print(msg);
+		return ctrl.texto();
+	}
+	
+	private String ler_campo_obg(String msg) {
+		String campo;
+		do {
+			System.out.print(msg);
+			campo = ctrl.texto();
+		}while(campo.isEmpty());
+		return campo;
+	}
+	
+	private String ler_login() throws IOException {
+		String login;
+		do {
+			System.out.print("(*)Login: ");
+			login = ctrl.texto();
+		}while(!validar_login(login));
+		return login;
+	}
+	
+	private boolean validar_login(String login) throws IOException {
+		BufferedReader arquivo;
+		try {
+			arquivo = new BufferedReader( new FileReader(ARQUIVO_USUARIOS) );
+		}catch(IOException e) {
+			return true;
+		}
+		
+		String line = arquivo.readLine();
+		
+		while(line != null) {
+			if( line.startsWith(login) ) {
+				System.out.println("Estes login nao esta disponivel");
+				arquivo.close();
+				return false;
+			}
+			line = arquivo.readLine();
+		}
+		
+		arquivo.close();
+		return true;
+	}
+	
+	private String ler_telefone() {
+		boolean valido;
+		String tel;
+		int len;
+		do {
+			valido = true;
+			System.out.print("Telefone: ");
+			tel = ctrl.texto();
+			len = tel.length();
+			if(len == 0)
+				return tel;
+			else if(!(len >= 8 && len <= 11)) {
+				valido = false;
+			}
+			try {
+				Integer.parseInt(tel);
+			}catch(NumberFormatException e) {
+				System.out.println("Por favor insira somente numeros");
+				valido = false;
+			}
+		}while( !valido );
+		return tel;
 	}
 	
 	private int ler_tipo(String[] opcoes) {
