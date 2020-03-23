@@ -37,8 +37,12 @@ public class Transacao{
 		this.valor = valor;
 	}
 
-	public boolean isEnt_saida() {
+	public boolean isEntrada() {
 		return ent_saida;
+	}
+	
+	public boolean isSaida ( ) {
+		return !ent_saida;
 	}
 
 	public String toString(){
