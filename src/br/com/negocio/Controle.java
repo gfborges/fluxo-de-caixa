@@ -1,5 +1,6 @@
 package br.com.negocio;
 
+import java.io.Console;
 import java.util.Scanner;
 
 public class Controle {
@@ -40,6 +41,14 @@ public class Controle {
 		if(valido)
 			return in.startsWith("s") ? 1 : 0;
 		return -1;
+	}
+	
+	public String senha(String msg) {
+		Console console = System.console();
+        if (console == null) {
+            System.err.println("Erro ao criar instancia de Console");
+        }
+        return new String( console.readPassword(msg) );
 	}
 	
 	public static String attrOuEspaco(String attr) {
