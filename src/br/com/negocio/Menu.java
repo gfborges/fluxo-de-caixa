@@ -56,7 +56,7 @@ public class Menu {
 		boolean dt_flag;
 		do {
 			dt_flag = false;
-			System.out.print("Data(aaaa-MM-dd): ");
+			System.out.print("Data(aaaa-MM-dd)(ENTER p/ hoje): ");
 			data = ctrl.texto();
 			if(!data.isEmpty()) {
 				try {
