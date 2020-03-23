@@ -27,7 +27,7 @@ public class Caixa{
 		List<Transacao> entradas =  new ArrayList<Transacao>();
 		List<Transacao> saidas = new ArrayList<Transacao>();
 		for(Transacao t : semana ) {
-			if(t.isEnt_saida())
+			if(t.isEntrada())
 				entradas.add(t);
 			else
 				saidas.add(t);
