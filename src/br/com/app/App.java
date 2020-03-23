@@ -7,7 +7,7 @@ public class App {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		Menu menu= new Menu();
+		Menu menu = new Menu();
 		Caixa caixa = new Caixa();
 		int op = -1;
 		
@@ -29,6 +29,7 @@ public class App {
 				case 6: // Remover saida
 					break;
 				case 7: // Relatório
+					menu.relatorio(caixa);
 					break;
 				case 8: // Cadastrar usuário
 					break;
