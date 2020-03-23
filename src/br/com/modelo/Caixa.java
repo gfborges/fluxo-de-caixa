@@ -56,7 +56,7 @@ public class Caixa{
 				curr = "";
 			s += String.format("%-40s|\n", curr);
 		}
-		s += "|TOTAL" + String.format("%25s | ", ent.toString());
+		s += "|TOTAL" + String.format("%25s |", ent.toString());
 		s += "TOTAL" + String.format("%35s|", saida.toString()) + "\n";
 		return s;
 	}
