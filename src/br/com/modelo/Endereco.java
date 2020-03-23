@@ -1,5 +1,7 @@
 package br.com.modelo;
 
+import br.com.negocio.Controle;
+
 public class Endereco {
 	private String cidade;
 	private String bairro;
@@ -57,11 +59,11 @@ public class Endereco {
 	}
 	
 	public String toCSV() {
-		String line = cidade + "," +
-					  bairro + "," +
-					  rua + "," +
-					  numero + "," +
-					  complemento;
+		String line = Controle.attrOuEspaco(cidade) + "," +
+					  Controle.attrOuEspaco(bairro) + "," +
+					  Controle.attrOuEspaco(rua)    + "," +
+					  Controle.attrOuEspaco(numero) + "," +
+					  Controle.attrOuEspaco(complemento);
 		return line;
 	}
 }
