@@ -8,6 +8,14 @@ public class Telefone {
 	}
 
 	public String getNumero() {
+		return numero;
+	}
+
+	public void setNumero(String numero) {
+		this.numero = numero;
+	}
+	
+	public String toString() {
 		int len = numero.length();
 		if(len == 8)
 			return numero.substring(0, 4) + "-" + numero.substring(4) ;
@@ -20,14 +28,6 @@ public class Telefone {
 			return String.format("(%s) ", numero.substring(0, 2)) + 
 					String.format("%s-%s", numero.substring(2, 7), numero.substring(7));
 		return numero;
-	}
-
-	public void setNumero(String numero) {
-		this.numero = numero;
-	}
-	
-	public String toString() {
-		return this.getNumero();
 	}
 	
 }
