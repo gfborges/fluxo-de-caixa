@@ -1,17 +1,30 @@
 package br.com.app;
 
+import java.io.IOException;
+
 import br.com.modelo.Caixa;
 import br.com.negocio.Menu;
 
 public class App {
 
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+	public static void main(String[] args) throws IOException {
 		Menu menu = new Menu();
 		Caixa caixa = new Caixa();
+		boolean logado = false;
 		int op = -1;
-		
-		while(true) {
+		if( args.length < 2 && menu.confirmarN("Deseja efetuar cadastro") ) {
+			// menu.cadastrar();
+			System.out.println("Uso: java -jar caixa.jar <login> <senha>");
+		}
+		else if( args.length > 1 && (logado = !menu.login(args[0], args[1])) ) {
+			System.out.println("Login ou senha inválidos");
+			menu.sair();
+		}
+		if(!logado) {
+			logado = menu.login();
+		}
+		// App menu
+		while(logado) {
 			op = menu.menu();
 			switch (op){
 				case 1: // Nova entrada
