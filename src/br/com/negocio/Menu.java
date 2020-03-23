@@ -37,7 +37,7 @@ public class Menu {
 			Transacao.listar_tipos(opcoes); // lista comecando do 1
 			System.out.print("Tipo: ");
 			tipo = ctrl.opcao();
-		}while(tipo < 0 || tipo >= Entrada.TIPOS.length );
+		}while(tipo <= 0 || tipo > opcoes.length );
 		return tipo - 1; // indice comeca do 0
 	}
 	
@@ -62,7 +62,7 @@ public class Menu {
 				try {
 					dt = LocalDate.parse(data); 
 				}
-				catch( DateTimeParseException e){
+				catch( DateTimeParseException e ){
 					System.out.println("Data invalida! Tente novamente");
 					dt_flag = true;
 				}
@@ -72,6 +72,47 @@ public class Menu {
 			}
 		}while(dt_flag);
 		return data;
+	}
+	
+	private String ler_semana() {
+		int dia;
+		boolean dt_flag;
+		String data, semana;
+		do {
+			dt_flag = false;
+			System.out.print("Semana(aaaa-MM-SS): ");
+			semana = ctrl.texto();
+			if(semana.isEmpty()){
+				LocalDate dt = LocalDate.now();
+				data = dt.toString();
+				dia = dt.getDayOfMonth();
+				dia = (dia / 7) + 1;
+				semana = data.substring(0, 8) + String.format("%02d", dia);
+				return semana;
+			}
+			if(semana.length()!= 10)
+				continue;
+			
+			try {
+				dia = Integer.valueOf(semana.substring(8));
+			}
+			catch(Exception e) {
+				System.out.println("Semana invalida!");
+				continue;
+			}
+			
+			dia = (dia-1) * 7 + 1;
+			data = semana.substring(0, 8) + String.format("%02d", dia);;
+			
+			try {
+				LocalDate.parse(data);
+			}
+			catch(DateTimeParseException e) {
+				dt_flag = true;
+			}
+		}while(dt_flag);
+		
+		return semana;
 	}
 	
 	public void nova_entrada(Caixa caixa) {
@@ -89,15 +130,18 @@ public class Menu {
 		
 		// Data
 		data = ler_data();
+		dt = LocalDate.parse(data);
 		
 		Transacao ent = new Entrada(data, valor, tipo);
 		
 		ano = Integer.toString( dt.getYear() );
 		mes = String.format("%02d", dt.getMonthValue() );
-		semana = String.format("%02d", dt.getDayOfMonth() / 7 );
+		semana = String.format("%02d", dt.getDayOfMonth() / 7 + 1 );
 		String key = String.format("%s-%s-%s", ano, mes, semana);
 		
 		caixa.novo_registro(key, ent);
+		System.out.println("A entrada \"" + ent + "\" foi inserida nos registros da semana " + key);
+		System.out.println(ent);
 	}
 	
 	public void nova_saida(Caixa caixa) {
@@ -115,15 +159,18 @@ public class Menu {
 		
 		// Data
 		data = ler_data();
+		dt = LocalDate.parse(data);
+				
+		Transacao saida = new Saida(data, valor, tipo);
 		
 		ano = Integer.toString( dt.getYear() );
 		mes = String.format("%02d", dt.getMonthValue() );
-		semana = String.format("%02d", dt.getDayOfMonth() / 7 );
-		
-		Transacao ent = new Saida(data, valor, tipo);
+		semana = String.format("%02d", dt.getDayOfMonth() / 7 + 1 );
 		String key = String.format("%s-%s-%s", ano, mes, semana);
 		
-		caixa.novo_registro(key, ent);
+		System.out.println("A entrada \"" + saida + "\" foi inserida nos registros da semana " + key);
+		
+		caixa.novo_registro(key, saida);
 	}
 	
 	public void pausar() {
@@ -133,6 +180,13 @@ public class Menu {
 	
 	public void sair() {
 		System.exit(0);
+	}
+	
+	public void relatorio(Caixa caixa) {
+		System.out.println("Semana que deseja imprimir o relatório");
+		String semana = ler_semana();
+		String relatorio = caixa.relatorio_semanal(semana);
+		System.out.println(relatorio);
 	}
 	
 }
