@@ -31,4 +31,14 @@ public class Controle {
 		}
 		return d;
 	}
+	
+	public int bool_int(boolean vazio) {
+		String in = this.texto().toLowerCase();
+		if( in.isEmpty() )
+			return  vazio? 1 : 0;
+		boolean valido = in.startsWith("s") || in.startsWith("n");
+		if(valido)
+			return in.startsWith("s") ? 1 : 0;
+		return -1;
+	}
 }
