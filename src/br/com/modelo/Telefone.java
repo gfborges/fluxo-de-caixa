@@ -3,7 +3,7 @@ package br.com.modelo;
 public class Telefone {
 	private String numero;
 	
-	Telefone(String numero){
+	public Telefone(String numero){
 		this.numero = numero;
 	}
 
