@@ -298,6 +298,25 @@ public class Menu {
 		return semana;
 	}
 	
+	private String ler_mes() {
+		String mes; 
+		boolean dt_flag;
+		do {
+			dt_flag = false;
+			System.out.print("Mes(aaaa-MM):");
+			mes = ctrl.texto();
+			if(mes.isEmpty()) {
+				return LocalDate.now().toString().substring(0, 7); // 2020-03
+			}
+			try {
+				LocalDate.parse(mes+"-01");
+			}catch(Exception e){
+				dt_flag = true;
+			}
+		}while(dt_flag);
+		return mes;
+	}
+	
 	public void nova_entrada(Caixa caixa) throws IOException {
 		String data, tipo;
 		double valor = -1;
@@ -386,12 +405,25 @@ public class Menu {
 	}
 	
 	public void relatorio(Caixa caixa) throws IOException {
-		System.out.println("Semana que deseja imprimir o relatório");
-		String semana = ler_semana();
-		String relatorio = caixa.relatorio_semanal(semana);
-		System.out.println(relatorio);
-		if( confirmarS("Deseja salvar este relatorio") ) {
-			salvar_relatorio(semana + ".txt", relatorio);
+		int escolha;
+		String[] tipos = {"Semanal", "Mensal"};
+		escolha = ler_tipo_int(tipos);
+		if(escolha == 0 ) {
+			System.out.println("Semana que deseja imprimir o relatório");
+			String semana = ler_semana();
+			String relatorio = caixa.relatorio_semanal(semana);
+			System.out.println(relatorio);
+			if( confirmarS("Deseja salvar este relatorio") ) {
+				salvar_relatorio(semana + ".txt", relatorio);
+			}
+		}
+		else {
+			System.out.println("Mes que deseja imprimir o relatório");
+			String mes = ler_mes();
+			String relatorio = caixa.relatorio_mensal(mes);
+			System.out.println(relatorio);
+			if( confirmarS("Deseja salvar esse relatorio") )
+				salvar_relatorio(mes + ".txt", relatorio);
 		}
 	}
 	
