@@ -10,7 +10,7 @@ public class Entrada extends Transacao{
 	  
 	@Override
 	public String toString() {
-		return " + " + super.toString(32);
+		return " + " + super.toString(28);
 		}
 	}
 

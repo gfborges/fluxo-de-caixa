@@ -53,9 +53,10 @@ public class Transacao{
 	  }
 
 	  public String toString(int spc){
-		  String s = this.tipo;
 		  String val = String.format("%.2f", valor);
-		  s += String.format("%" + (spc - tipo.length())+ "s" , val);
+		  int dia = LocalDate.parse(data).getDayOfMonth();
+		  String s = this.tipo + String.format("(%02d)", dia);
+		  s += String.format("%" + (spc - tipo.length())+ "s" , val,dia);
 		  return s;
 	  }
 
@@ -72,6 +73,17 @@ public class Transacao{
 		  return (this.tipo.equals(t.getTipo()) && 
 				  this.valor == t.getValor() && 
 				  this.data.equals(t.getData()));
+	  }
+	  
+	  public int compareTo(Object o) {
+		  if(o == this)
+			  return 0;
+		  if(!(o instanceof Transacao))
+			  System.err.println("Erro de tipo durante insercao de transacao no caixa");
+		  Transacao t = (Transacao) o;
+		  LocalDate dt = LocalDate.parse(data);
+		  LocalDate dt2 = LocalDate.parse(t.getData());
+		  return dt.compareTo(dt2);
 	  }
 	  
 	  public static String getKey(String data) {
