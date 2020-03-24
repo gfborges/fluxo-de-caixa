@@ -44,7 +44,7 @@ public class Menu {
 		email = ler_campo_obg("(*)E-mail: ");
 		
 		tipo = ler_tipo_int(Usuario.TIPOS);
-		
+
 		telefone = ler_telefone();
 		
 		cidade = ler_campo("Cidade: ");
