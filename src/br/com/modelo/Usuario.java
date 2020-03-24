@@ -94,8 +94,7 @@ public class Usuario {
 		return (tipo)? 0: 1;
 	}
 	
-	public void toCSV() throws IOException {
-		boolean saving = true;
+	public String toCSV() {
 		String line  = LOGIN + "," +
 					   SENHA + "," +
 					   caixa + "," +
@@ -103,7 +102,13 @@ public class Usuario {
 					   email + "," +
 					   getTipo_int() + "," +
 					   Controle.attrOuEspaco(tel.getNumero()) + "," +
-					   endereco.toCSV() + "\n";
+					   endereco.toCSV() + System.getProperty("line.separator");
+		return line;
+	}
+	
+	public void salvarCSV() throws IOException {
+		boolean saving = true;
+		String line = toCSV();
 		while(saving) {
 			try {
 				Files.write(Paths.get(ARQUIVO_USUARIOS), line.getBytes(), StandardOpenOption.APPEND);
