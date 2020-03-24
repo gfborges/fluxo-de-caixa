@@ -19,11 +19,24 @@ import br.com.modelo.Usuario;
 public class Menu {
 	private final String ARQUIVO_USUARIOS;
 	private Controle ctrl;
-	public Usuario usuario;
+	public Usuario usuario = null;
 	
 	public Menu() {
 		this.ctrl = new Controle();
 		this.ARQUIVO_USUARIOS = Usuario.ARQUIVO_USUARIOS;
+	}
+	
+	public int menu() {
+		System.out.println("Menu");
+		System.out.println(" [1] Nova entrada");
+		System.out.println(" [2] Nova saida");
+		System.out.println(" [3] Excluir transacao");
+		System.out.println(" [4] Relatorios");
+		System.out.println(" [5] Cadastrar usuário");
+		System.out.println(" [6] Sobre");
+		System.out.println(" [0] Sair");
+		System.out.print("Selecione uma opçao: ");
+		return ctrl.opcao();
 	}
 	
 	public void cadastrar() throws IOException {
@@ -40,7 +53,11 @@ public class Menu {
 		
 		login = ler_login();
 		senha = ler_campo_obg("(*)Senha: ");
-		caixa = "." + login + ".csv";
+		
+		if(usuario != null && confirmarS("Deseja que este usuario tenha acesso aos mesmos dados que você"))
+			caixa = usuario.getCaixa();
+		else
+			caixa = "." + login + ".csv";
 		
 		nome = ler_campo_obg("(*)Nome: ");
 		email = ler_campo_obg("(*)E-mail: ");
@@ -58,10 +75,11 @@ public class Menu {
 		Telefone tel = new Telefone(telefone);
 		Endereco end = new Endereco(cidade, bairro, rua, numero, complemento);
 		Usuario user = new Usuario(login, senha, caixa, nome, email, tipo, tel, end);
-		System.out.println(">>>" + caixa);
-		user.toCSV();
 		
-		login(login, senha);
+		user.salvarCSV();
+		
+		if(usuario != null)
+			login(login, senha);
 	}
 	
 	public boolean init(String[] args) throws IOException {
@@ -112,21 +130,6 @@ public class Menu {
 		senha = ler_senha();
 		
 		return login(login, senha);
-	}
-	
-	public int menu() {
-		System.out.println("Menu");
-		System.out.println(" [1] Nova entrada");
-		System.out.println(" [2] Nova saida");
-		System.out.println(" [3] Excluir entrada");
-		System.out.println(" [4] Excluir saida");
-		System.out.println(" [5] Editar entrada");
-		System.out.println(" [6] Editar saida");
-		System.out.println(" [7] Relatorios");
-		System.out.println(" [8] Cadastrar usuário");
-		System.out.println(" [0] Sair");
-		System.out.print("Selecione uma opçao: ");
-		return ctrl.opcao();
 	}
 	
 	private String ler_campo(String msg) {
@@ -340,7 +343,7 @@ public class Menu {
 		
 		caixa.novo_registro(key, ent);
 		System.out.println("A entrada \"" + ent + "\" foi inserida nos registros da semana " + key);
-		ent.toCSV( usuario.getCaixa() );
+		ent.salvarCSV( usuario.getCaixa() );
 	}
 	
 	public void nova_saida(Caixa caixa) throws IOException {
@@ -374,7 +377,7 @@ public class Menu {
 		
 		System.out.println("A entrada \"" + saida + "\" foi inserida nos registros da semana " + key);
 		
-		saida.toCSV( usuario.getCaixa() );
+		saida.salvarCSV( usuario.getCaixa() );
 	}
 	
 	public void pausar() {
@@ -435,4 +438,31 @@ public class Menu {
 		System.out.println("'" + arquivo +"', salvo com sucesso");
 	}
 	
+	public void remover(Caixa caixa) throws IOException {
+		System.out.println("Semana que deseja remover um transacao");
+		while(true) {
+			String semana = ler_semana();
+			System.out.println("Remova a transacao pelo seu numero(id)");
+			if( caixa.listar_registros(semana) ) {
+				System.out.print("Id: ");
+				int i = ctrl.opcao();
+				Transacao t  = caixa.remover(semana, i-1);
+				if(t!= null) {
+					caixa.remover_transacao_arq(t.toCSV(), usuario.getCaixa());
+					System.out.println("Transacao removida com sucesso");
+					return;
+				}
+			}
+			System.out.println("Semana inválida, tente novamente");
+		}
+	}
+	
+	public void sobre() {
+		System.out.println("Fluxo de caixa");
+		System.out.println("Atividade de Programação Orientada a Objetos");
+		System.out.println("FATEC - SJC - Prof. Me. Eng. Gerson Neto");
+		System.out.println("Autores:");
+		System.out.println(" * Gabriel Mendes (http://github.com/gmendess)");
+		System.out.println(" * Gabriel Borges (http://github.com/gfborges)");
+	}
 }
