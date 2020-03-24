@@ -200,8 +200,9 @@ public class Menu {
 	}
 	
 	private int ler_tipo_int(String[] opcoes) {
-		int tipo = 0;
+		int tipo;
 		do {
+			tipo = 0;
 			System.out.println("Escolha um dos tipos a seguir:");
 			
 			for(String opcao : opcoes) {
