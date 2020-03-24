@@ -9,7 +9,7 @@ import java.nio.file.StandardOpenOption;
 import br.com.negocio.Controle;
 
 public class Usuario {
-	public static final String ARQUIVO_USUARIOS = "usuarios.csv";
+	public static final String ARQUIVO_USUARIOS = ".usuarios.csv";
 	public static final String[] TIPOS = {"Pessoa Juridica", "Pessoa Fisica"};
 	
 	private final String LOGIN;
