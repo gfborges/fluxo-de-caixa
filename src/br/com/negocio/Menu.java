@@ -204,15 +204,14 @@ public class Menu {
 	}
 	
 	private int ler_tipo_int(String[] opcoes) {
-		int tipo;
+		int tipo = 0;
+		
+		System.out.println("Escolha um dos tipos a seguir:");
+		for(String opcao : opcoes) {
+			System.out.printf(" [%d] %s\n", ++tipo, opcao);
+		}
+		
 		do {
-			tipo = 0;
-			System.out.println("Escolha um dos tipos a seguir:");
-			
-			for(String opcao : opcoes) {
-				System.out.printf(" [%d] %s\n", ++tipo, opcao);
-			}
-			
 			System.out.print("Tipo: ");
 			tipo = ctrl.opcao();
 		}while(tipo <= 0 || tipo > opcoes.length );
