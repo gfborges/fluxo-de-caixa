@@ -29,7 +29,7 @@ public class Usuario {
 		this.caixa = caixa;
 		this.nome = nome;
 		this.email = email;
-		this.tipo = (tipo == 1)? true : false;
+		this.tipo = (tipo == 1)? false : true;
 		this.tel = tel;
 		this.endereco = endereco;
 	}
@@ -91,7 +91,7 @@ public class Usuario {
 	}
 	
 	public int getTipo_int() {
-		return (tipo)? 1: 0;
+		return (tipo)? 0: 1;
 	}
 	
 	public void toCSV() throws IOException {
