@@ -164,7 +164,7 @@ public class Menu {
 		
 		while(line != null) {
 			if( line.startsWith(login) ) {
-				System.out.println("Estes login nao esta disponivel");
+				System.out.println("Este login nao esta disponivel");
 				arquivo.close();
 				return false;
 			}

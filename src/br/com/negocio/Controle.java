@@ -14,8 +14,8 @@ public class Controle {
 		int i = -1;
 		if(scan.hasNextInt()) {
 			i = scan.nextInt();
-			scan.nextLine();
 		}
+		scan.nextLine();
 		return i;
 	}
 	
