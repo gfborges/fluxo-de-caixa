@@ -58,11 +58,12 @@ public class Menu {
 		Telefone tel = new Telefone(telefone);
 		Endereco end = new Endereco(cidade, bairro, rua, numero, complemento);
 		Usuario user = new Usuario(login, senha, caixa, nome, email, tipo, tel, end);
-		
+		System.out.println(">>>" + caixa);
 		user.toCSV();
 		
 		login(login, senha);
 	}
+	
 	public boolean init(String[] args) throws IOException {
 		if( args.length >= 2 && login(args[0], args[1])) {
 				return true;
@@ -74,8 +75,9 @@ public class Menu {
 				System.out.println("Uso: java -jar caixa.jar <login> <senha>\n");
 				return true;
 		}
-		return login();
+		return false;
 	}
+	
 	public boolean login(String login, String senha) throws IOException {
 		BufferedReader arquivo;
 		try {
@@ -295,9 +297,8 @@ public class Menu {
 		return semana;
 	}
 	
-	public void nova_entrada(Caixa caixa) {
-		String data, ano, mes, semana, tipo;
-		LocalDate dt = LocalDate.now();
+	public void nova_entrada(Caixa caixa) throws IOException {
+		String data, tipo;
 		double valor = -1;
 		System.out.println("Por favor preencha todos os campos");
 		
@@ -312,21 +313,17 @@ public class Menu {
 		
 		// Data
 		data = ler_data();
-		dt = LocalDate.parse(data);
 		
 		Transacao ent = new Entrada(data, valor, tipo);
 		
-		ano = Integer.toString( dt.getYear() );
-		mes = String.format("%02d", dt.getMonthValue() );
-		semana = String.format("%02d", dt.getDayOfMonth() / 7 + 1 );
-		String key = String.format("%s-%s-%s", ano, mes, semana);
+		String key = Transacao.getKey(data);
 		
 		caixa.novo_registro(key, ent);
 		System.out.println("A entrada \"" + ent + "\" foi inserida nos registros da semana " + key);
-		System.out.println(ent);
+		ent.toCSV( usuario.getCaixa() );
 	}
 	
-	public void nova_saida(Caixa caixa) {
+	public void nova_saida(Caixa caixa) throws IOException {
 		String data, ano, mes, semana;
 		LocalDate dt = LocalDate.now();
 		String tipo;
@@ -353,9 +350,11 @@ public class Menu {
 		semana = String.format("%02d", dt.getDayOfMonth() / 7 + 1 );
 		String key = String.format("%s-%s-%s", ano, mes, semana);
 		
+		caixa.novo_registro(key, saida);
+		
 		System.out.println("A entrada \"" + saida + "\" foi inserida nos registros da semana " + key);
 		
-		caixa.novo_registro(key, saida);
+		saida.toCSV( usuario.getCaixa() );
 	}
 	
 	public void pausar() {

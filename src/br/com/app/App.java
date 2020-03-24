@@ -8,12 +8,12 @@ public class App {
 
 	public static void main(String[] args) throws IOException {
 		Menu menu = new Menu();
-		Caixa caixa = new Caixa();
 		boolean logado = menu.init(args);
 		int op = -1;
 		while(!logado) {
 			logado = menu.login();
 		}
+		Caixa caixa = new Caixa(menu.usuario.getCaixa());
 		// App menu
 		while(logado) {
 			op = menu.menu();

@@ -1,5 +1,13 @@
 package br.com.modelo;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+//import java.io.FileWriter;
+//import java.io.IOException;
+//import java.nio.file.Files;
+//import java.nio.file.Paths;
+//import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -11,8 +19,13 @@ public class Caixa{
 			   "+------------- ENTRADA ---------+------------------- SAIDA --------------+\n";
 	private static final String RODAPE =
 			   "+------------------------------------------------------------------------+\n";
+	
 	private Hashtable< String, List<Transacao> > registro = new Hashtable< String, List<Transacao> >();
-
+	
+	public Caixa(String arquivo) throws IOException{
+		this.fromCSV(arquivo);
+	}
+	
 	public void novo_registro(String key, Transacao t){
 		if(registro.get(key) == null){
 			List<Transacao> l1 = new ArrayList<Transacao>();
@@ -77,4 +90,26 @@ public class Caixa{
 		return s;
 	}
 	
+	public void fromCSV(String nome_arquivo) throws IOException {
+		BufferedReader arquivo;
+		Transacao t;
+		try {
+			arquivo = new BufferedReader( new FileReader(nome_arquivo) );
+		}catch(IOException e) {
+			return;
+		}
+		String line = arquivo.readLine();
+		while(line != null) {
+			String[] row  = line.split(",");
+			double valor = Double.parseDouble(row[3]);
+			boolean tipo = ( row[4].equals("1") ) ? true : false;
+			if(tipo)
+				t = new Entrada(row[1], valor, row[2]);
+			else
+				t = new Saida(row[1], valor, row[2]);
+			novo_registro(row[0], t);
+			line = arquivo.readLine();
+		}
+		arquivo.close();
+	}
 }
