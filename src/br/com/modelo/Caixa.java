@@ -1,7 +1,10 @@
 package br.com.modelo;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 //import java.io.FileWriter;
 //import java.io.IOException;
@@ -64,6 +67,25 @@ public class Caixa{
 
 	public Transacao get(String key, int i){
 		return registro.get(key).get(i);
+	}
+	
+	public Transacao remover(String key, int i) {
+		Transacao t = null;
+		if(i > 0 && i < registro.get(key).size() ) {
+			t  = registro.get(key).get(i);
+			registro.get(key).remove(i);
+		}
+		return t;	
+	}
+	
+	public boolean listar_registros(String key){
+		int i = 0;
+		if(registro.get(key) == null )
+			return false;
+		for(Transacao t : registro.get(key)) {
+			System.out.printf(" [%d]%s\n", ++i, t);
+		}
+		return true;
 	}
 	
 	private String relatorio_corpo(List<Transacao> entradas, List<Transacao> saidas) {
@@ -158,6 +180,28 @@ public class Caixa{
 		s += relatorio_rodape(total_ents, total_saida);
 		
 		return s;
+	}
+	
+	public  void remover_transacao_arq(String t, String nome_arquivo) throws IOException {
+		File arquivo = new File(nome_arquivo);
+		File temp  = new File("temp.txt");
+		BufferedReader arq;
+		BufferedWriter bw;
+		try {
+			arq = new BufferedReader( new FileReader(arquivo) );
+			bw = new BufferedWriter( new FileWriter(temp) );
+		}catch(IOException e ) {
+			return;
+		}
+		String linha = arq.readLine();
+		while(linha != null) {
+			if(!linha.equals(t))
+				bw.write(linha +  System.getProperty("line.separator"));
+			linha = arq.readLine();
+		}
+		arq.close();
+		bw.close();
+		temp.renameTo(arquivo);
 	}
 	
 	public void fromCSV(String nome_arquivo) throws IOException {
