@@ -14,8 +14,12 @@ import java.util.List;
 
 public class Caixa{
 	private static final String CABECALHO = 
-			   "\n+-------------------------------  RELATORIO  ------------------------------+\n" +
-			   "+-------------------------------- %s ------------------------------+\n"  +
+			   "\n+------------------------------  RELATORIO  -------------------------------+\n" +
+			   "+------------------------------- %s -------------------------------+\n"  +
+			   "+------------- ENTRADA --------------+--------------- SAIDA ---------------+\n";
+	private static final String CABECALHO_MENSAL = 
+			   "\n+------------------------------  RELATORIO  -------------------------------+\n" +
+			   "+-------------------------------- %s ---------------------------------+\n"  +
 			   "+------------- ENTRADA --------------+--------------- SAIDA ---------------+\n";
 	private static final String RODAPE =
 			   "+--------------------------------------------------------------------------+\n";
@@ -31,11 +35,70 @@ public class Caixa{
 			List<Transacao> l1 = new ArrayList<Transacao>();
 			registro.put(key, l1);
 		}
-		registro.get(key).add(t);
+		adiciona_ordenado(key, t);
 	}
+	
+	private void adiciona_ordenado(String key, Transacao t) {
+		List<Transacao> registro = this.registro.get(key);
+		if(registro.isEmpty()) { // Lista vaiza = insere
+			this.registro.get(key).add(t);
+		}
+		else if( ( t.compareTo(registro.get(0)) ) < 0 ) { // Não tem predecessor insere no começo
+			this.registro.get(key).add(0,t);
+		}
+		else { // Busca binaria por predecesor
+			int l = 0, r = registro.size() - 1, m;
+			int comp;
+			while(l < r) {
+				m = (l + r + 1) / 2;
+				comp = t.compareTo( registro.get(m) );
+				if(comp <= 0)
+					r = m - 1;
+				else 
+					l = m;
+			}
+			this.registro.get(key).add(l+1, t);
+		}
+	}
+
 
 	public Transacao get(String key, int i){
 		return registro.get(key).get(i);
+	}
+	
+	private String relatorio_corpo(List<Transacao> entradas, List<Transacao> saidas) {
+		String curr, s = "";
+		final int ent_size = entradas.size();
+		final int saidas_size = saidas.size();
+		
+		for(int i = 0; i < ent_size || i < saidas_size; ++i) {
+			
+			if(i < ent_size)
+				curr = entradas.get(i).toString();
+			else
+				curr = "";
+			s += String.format("|%-35s |", curr);
+			
+			if(i < saidas_size)
+				curr = saidas.get(i).toString();
+			else
+				curr = "";
+			s += String.format("%-37s|\n", curr);
+		}
+		
+		return s;
+	}
+	
+	private String relatorio_rodape(double total_ents, double total_saida) {
+		String s = "";
+		String total = String.format("%.2f", total_ents);
+		s += "| TOTAL" + String.format("%29s |", total);
+		total = String.format("%.2f", total_saida );
+		s += " TOTAL" + String.format("%30s |", total) + "\n";
+		total = String.format("%.2f", total_ents  + total_saida);
+		s += String.format("| LUCRO %-67s|%n", total);
+		s += RODAPE;
+		return s;
 	}
 	
 	public String relatorio_semanal(String key) {
@@ -45,44 +108,54 @@ public class Caixa{
 		
 		List<Transacao> entradas =  new ArrayList<Transacao>();
 		List<Transacao> saidas = new ArrayList<Transacao>();
+		double total_ents = 0.0, total_saida = 0.0;
+		
 		for(Transacao t : semana ) {
-			if(t.isEntrada())
+			if(t.isEntrada()) {
 				entradas.add(t);
-			else
+				total_ents += t.valueOf();
+			}
+			else {
 				saidas.add(t);
+				total_saida += t.valueOf();
+			}
 		}
 		
-		String curr;
-		Double total_ents = 0.0, total_saida = 0.0;
-		final int ent_size = entradas.size();
-		final int saidas_size = saidas.size();
-
 		String s = String.format(CABECALHO, key);
+		s += relatorio_corpo(entradas, saidas);
+		s += relatorio_rodape(total_ents, total_saida);
 		
-		for(int i = 0; i < ent_size || i < saidas_size; ++i) {
-			if(i < ent_size) {
-				curr = entradas.get(i).toString();
-				total_ents += entradas.get(i).valueOf();
+		return s;
+	}
+	
+	public String relatorio_mensal(String mes){
+		String key, s;
+		s = String.format(CABECALHO_MENSAL, mes);
+		
+		double total_ents = 0.0, total_saida = 0.0;
+		List<Transacao> entradas = new ArrayList<Transacao>();
+		List<Transacao> saidas = new ArrayList<Transacao>();
+		
+		for(int sem = 1; sem <= 4; ++sem) {
+			key = mes + String.format("-%02d", sem);
+			
+			if(registro.get(key) == null)
+				continue;
+			
+			for(Transacao t : registro.get(key)) {
+				if(t.isEntrada()) {
+					entradas.add(t);
+					total_ents += t.valueOf();
+				}
+				else {
+					saidas.add(t);
+					total_saida += t.valueOf();
+				}
 			}
-			else
-				curr = "";
-			s += String.format("|%-33s |", curr);
-			if(i < saidas_size) {
-				curr = saidas.get(i).toString();
-				total_saida += saidas.get(i).valueOf();
-			}
-			else
-				curr = "";
-			s += String.format("%-37s|\n", curr);
 		}
 		
-		String total = String.format("%.2f", total_ents);
-		s += "| TOTAL" + String.format("%29s |", total);
-		total = String.format("%.2f", total_saida );
-		s += " TOTAL" + String.format("%30s |", total) + "\n";
-		total = String.format("%.2f", total_ents  + total_saida);
-		s += String.format("| LUCRO %-67s|%n", total);
-		s += RODAPE;
+		s += relatorio_corpo(entradas, saidas);
+		s += relatorio_rodape(total_ents, total_saida);
 		
 		return s;
 	}
