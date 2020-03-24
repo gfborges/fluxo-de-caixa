@@ -5,6 +5,12 @@ import java.util.Hashtable;
 import java.util.List;
 
 public class Caixa{
+	private static final String CABECALHO = 
+			   "\n+-----------------------------  RELATORIO  ------------------------------+\n" +
+			   "+----------------------------- %s -------------------------------+\n"  +
+			   "+------------- ENTRADA ---------+------------------- SAIDA --------------+\n";
+	private static final String RODAPE =
+			   "+------------------------------------------------------------------------+\\n";
 	private Hashtable< String, List<Transacao> > registro = new Hashtable< String, List<Transacao> >();
 
 	public void novo_registro(String key, Transacao t){
@@ -34,30 +40,41 @@ public class Caixa{
 		}
 		
 		String curr;
-		Double ent = 0.0, saida = 0.0;
+		Double total_ents = 0.0, total_saida = 0.0;
 		final int ent_size = entradas.size();
 		final int saidas_size = saidas.size();
+//		+-----------------------------  RELATORIO  ------------------------------+
+//		+--------------------------- %s ------------------------------+
+//		+------------- ENTRADA -------------+--------------- SAIDA --------------+
+
+		String s = String.format(CABECALHO, key);
 		
-		String s = "\n+------------ RELATORIO ------------+\n"
-				 +   "+----------- " + key + " -----------+\n";
 		for(int i = 0; i < ent_size || i < saidas_size; ++i) {
 			if(i < ent_size) {
 				curr = entradas.get(i).toString();
-				ent += entradas.get(i).valueOf();
+				total_ents += entradas.get(i).valueOf();
 			}
 			else
 				curr = "";
 			s += String.format("|%-30s |", curr);
 			if(i < saidas_size) {
 				curr = saidas.get(i).toString();
-				saida += saidas.get(i).valueOf();
+				total_saida += saidas.get(i).valueOf();
 			}
 			else
 				curr = "";
 			s += String.format("%-40s|\n", curr);
 		}
-		s += "| TOTAL" + String.format("%24s |", ent.toString());
-		s += " TOTAL" + String.format("%34s|", saida.toString()) + "\n";
+		
+		String total = String.format("%.2f", total_ents);
+		s += "| TOTAL" + String.format("%24s |", total);
+		total = String.format("%.2f", total_saida );
+		s += " TOTAL" + String.format("%34s|", total) + "\n";
+		total = String.format("%.2f", total_ents  + total_saida);
+		s += String.format("| LUCRO %-65s|%n", total);
+		s += RODAPE;
+		
 		return s;
 	}
+	
 }
