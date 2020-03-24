@@ -46,7 +46,7 @@ public class Transacao{
 	}
 
 	public String toString(){
-	    return this.tipo + " " + String.format("%.2lf", valor);
+	    return this.tipo + " " + String.format("%.2f", valor);
 	  }
 
 	  public double valueOf(){
