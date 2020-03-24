@@ -11,7 +11,7 @@ public class Transacao{
 	  protected String data;
 	  protected String tipo;
 	  protected double valor;
-	  protected final boolean ent_saida; // Entrade (T) / Saida (F)
+	  protected final boolean ent_saida; // Entrada (T) / Saida (F)
 	  
 	  public Transacao(String data, double valor, boolean ent_saida, String tipo){
 	    this.data = data;
@@ -52,8 +52,11 @@ public class Transacao{
 		  return !ent_saida;
 	  }
 
-	  public String toString(){
-		  return this.tipo + " " + String.format("%.2f", valor);
+	  public String toString(int spc){
+		  String s = this.tipo;
+		  String val = String.format("%.2f", valor);
+		  s += String.format("%" + (spc - tipo.length())+ "s" , val);
+		  return s;
 	  }
 
 	  public double valueOf(){

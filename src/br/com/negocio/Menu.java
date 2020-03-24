@@ -272,8 +272,10 @@ public class Menu {
 				semana = data.substring(0, 8) + String.format("%02d", dia);
 				return semana;
 			}
-			if(semana.length()!= 10)
+			if(semana.length()!= 10) {
+				dt_flag = true;
 				continue;
+			}
 			
 			try {
 				dia = Integer.valueOf(semana.substring(8));
