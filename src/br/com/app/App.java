@@ -24,18 +24,17 @@ public class App {
 				case 2: // Nova saida
 					menu.nova_saida(caixa);
 					break;
-				case 3: // Editar entrada
+				case 3: // Remover entrada / saida
+					menu.remover(caixa);
 					break;
-				case 4: // Editar saida
-					break;
-				case 5: // Remover entrada
-					break;
-				case 6: // Remover saida
-					break;
-				case 7: // Relatório
+				case 4: // Relatório
 					menu.relatorio(caixa);
 					break;
-				case 8: // Cadastrar usuário
+				case 5: // Cadastrar usuário
+					menu.cadastrar();
+					break;
+				case 6: // Sobre
+					menu.sobre();
 					break;
 				case 0:
 					menu.sair();
