@@ -18,20 +18,20 @@ public class App {
 		while(logado) {
 			op = menu.menu();
 			switch (op){
-				case 1: // Nova entrada
-					menu.nova_entrada(caixa);
+				case 1: // Nova transacao
+					menu.nova_transacao(caixa);
 					break;
-				case 2: // Nova saida
-					menu.nova_saida(caixa);
-					break;
-				case 3: // Remover entrada / saida
+				case 2: // Remover entrada / saida
 					menu.remover(caixa);
 					break;
-				case 4: // Relatório
+				case 3: // Relatório
 					menu.relatorio(caixa);
 					break;
-				case 5: // Cadastrar usuário
+				case 4: // Cadastrar usuário
 					menu.cadastrar();
+					break;
+				case 5: // Ver Perfil
+					menu.ver_perfil();
 					break;
 				case 6: // Sobre
 					menu.sobre();

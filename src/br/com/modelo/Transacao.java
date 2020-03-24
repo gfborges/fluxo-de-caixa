@@ -56,7 +56,7 @@ public class Transacao{
 		  String val = String.format("%.2f", valor);
 		  int dia = LocalDate.parse(data).getDayOfMonth();
 		  String s = this.tipo + String.format("(%02d)", dia);
-		  s += String.format("%" + (spc - tipo.length())+ "s" , val,dia);
+		  s += String.format("%" + (spc - tipo.length())+ "sR$" , val,dia);
 		  return s;
 	  }
 

@@ -58,6 +58,21 @@ public class Endereco {
 		this.complemento = complemento;
 	}
 	
+	public String toString() {
+		String s = "";
+		if(!cidade.isEmpty())
+			s +=  "Cidade: " + cidade + "\n";
+		if(!bairro.isEmpty())
+			s +=  "Bairro: " + bairro + "\n";
+		if(!rua.isEmpty())
+			s +=  "Rua: " + rua + "\n";
+		if(!numero.isEmpty())
+			s +=  "Numero: " + numero + "\n";
+		if(!complemento.isEmpty())
+			s +=  "Complemento: " + complemento + "\n";
+		return s;
+	}
+	
 	public String toCSV() {
 		String line = Controle.attrOuEspaco(cidade) + "," +
 					  Controle.attrOuEspaco(bairro) + "," +

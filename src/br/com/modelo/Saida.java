@@ -9,7 +9,7 @@ public class Saida extends Transacao{
 	  }
 
 	  public String  toString(){
-	    return " - " + super.toString(29);
+	    return " - " + super.toString(28);
 	  }
 
 	  public double valueOf(){

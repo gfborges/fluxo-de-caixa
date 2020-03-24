@@ -90,10 +90,29 @@ public class Usuario {
 		return !tipo;
 	}
 	
+	public String getTipo() {
+		if(isPf())
+			return TIPOS[0];
+		return TIPOS[1];
+	}
+	
 	public int getTipo_int() {
 		return (tipo)? 0: 1;
 	}
 	
+	public String toString() {
+		String s = "Nome: " + nome + "\n" +
+				   "Login: "+ LOGIN+ "\n" +
+				   "E-mail: "+ email + "\n" +
+				   "Tipo: " + getTipo()+ "\n" +
+				   "Arquivo caixa: " + caixa + "\n";
+		if(!tel.toString().isEmpty())
+			s += "Telefone: " + tel;
+		if(!endereco.toString().isEmpty())
+			s += endereco.toString();
+		return s;
+			
+	}
 	public String toCSV() {
 		String line  = LOGIN + "," +
 					   SENHA + "," +

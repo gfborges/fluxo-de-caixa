@@ -27,14 +27,15 @@ public class Menu {
 	}
 	
 	public int menu() {
-		System.out.println("Menu");
-		System.out.println(" [1] Nova entrada");
-		System.out.println(" [2] Nova saida");
-		System.out.println(" [3] Excluir transacao");
-		System.out.println(" [4] Relatorios");
-		System.out.println(" [5] Cadastrar usuário");
+		System.out.println("\n+---------Menu---------+");
+		System.out.println(" [1] Nova transacao");
+		System.out.println(" [2] Excluir transacao");
+		System.out.println(" [3] Relatorios");
+		System.out.println(" [4] Cadastrar usuário");
+		System.out.println(" [5] Ver perfil");
 		System.out.println(" [6] Sobre");
 		System.out.println(" [0] Sair");
+		System.out.println("+----------------------+");
 		System.out.print("Selecione uma opçao: ");
 		return ctrl.opcao();
 	}
@@ -80,6 +81,10 @@ public class Menu {
 		
 		if(usuario != null)
 			login(login, senha);
+	}
+	
+	public void ver_perfil() {
+		System.out.println(usuario);
 	}
 	
 	public boolean init(String[] args) throws IOException {
@@ -319,7 +324,14 @@ public class Menu {
 		}while(dt_flag);
 		return mes;
 	}
-	
+	public void nova_transacao(Caixa caixa) throws IOException {
+		String[] transacao = {"Entrada", "Saida"};
+		int t = ler_tipo_int(transacao);
+		if(t == 0)
+			nova_entrada(caixa);
+		else
+			nova_saida(caixa);
+	}
 	public void nova_entrada(Caixa caixa) throws IOException {
 		String data, tipo;
 		double valor = -1;
@@ -412,7 +424,7 @@ public class Menu {
 		String[] tipos = {"Semanal", "Mensal"};
 		escolha = ler_tipo_int(tipos);
 		if(escolha == 0 ) {
-			System.out.println("Semana que deseja imprimir o relatório");
+			System.out.println("Semana que deseja imprimir o relatório(ENTER p/ essa semana)");
 			String semana = ler_semana();
 			String relatorio = caixa.relatorio_semanal(semana);
 			System.out.println(relatorio);
@@ -421,7 +433,7 @@ public class Menu {
 			}
 		}
 		else {
-			System.out.println("Mes que deseja imprimir o relatório");
+			System.out.println("Mes que deseja imprimir o relatório(ENTER p/ esse mes)");
 			String mes = ler_mes();
 			String relatorio = caixa.relatorio_mensal(mes);
 			System.out.println(relatorio);
