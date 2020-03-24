@@ -98,8 +98,7 @@ public class Transacao{
 		  
 	  }
 	  
-	  public void toCSV(String arquivo) throws IOException {
-		  boolean saving = true;
+	  public String toCSV() {
 		  int saida = (ent_saida)? 1 :0;
 		  String key = getKey(data);
 		  String linha = key  + "," +
@@ -107,7 +106,12 @@ public class Transacao{
 				  		 tipo + "," +
 				  		 valor+ "," +
 				  		 saida+ "\n";
-		  
+		  return linha;
+	  }
+	  
+	  public void salvarCSV(String arquivo) throws IOException {
+		  boolean saving = true;
+		  String linha = this.toCSV();
 		  while(saving) {
 			  try {
 					Files.write(Paths.get(arquivo), linha.getBytes(), StandardOpenOption.APPEND);
