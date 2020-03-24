@@ -1,7 +1,9 @@
 package br.com.negocio;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
@@ -38,7 +40,7 @@ public class Menu {
 		
 		login = ler_login();
 		senha = ler_campo_obg("(*)Senha: ");
-		caixa = login + ".csv";
+		caixa = "." + login + ".csv";
 		
 		nome = ler_campo_obg("(*)Nome: ");
 		email = ler_campo_obg("(*)E-mail: ");
@@ -80,7 +82,7 @@ public class Menu {
 			arquivo = new BufferedReader( new FileReader(ARQUIVO_USUARIOS) );
 		}catch(IOException e) {
 			System.out.println("Não existem usuários para fazer login, por favor cadastre-se");
-			if( confirmarS("Deseja efetuar cadastro?") )
+			if( confirmarS("Deseja efetuar cadastro") )
 				cadastrar();
 			return false;
 		}
@@ -383,11 +385,22 @@ public class Menu {
 		return  op == 1;
 	}
 	
-	public void relatorio(Caixa caixa) {
+	public void relatorio(Caixa caixa) throws IOException {
 		System.out.println("Semana que deseja imprimir o relatório");
 		String semana = ler_semana();
 		String relatorio = caixa.relatorio_semanal(semana);
 		System.out.println(relatorio);
+		if( confirmarS("Deseja salvar este relatorio") ) {
+			salvar_relatorio(semana + ".txt", relatorio);
+		}
+	}
+	
+	public void salvar_relatorio(String arquivo, String file) throws IOException {
+		BufferedWriter bw;
+		bw = new BufferedWriter (new FileWriter(arquivo));
+		bw.write(file);
+		bw.close();
+		System.out.println("'" + arquivo +"', salvo com sucesso");
 	}
 	
 }

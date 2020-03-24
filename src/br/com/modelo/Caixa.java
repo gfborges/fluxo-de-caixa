@@ -10,7 +10,7 @@ public class Caixa{
 			   "+----------------------------- %s -------------------------------+\n"  +
 			   "+------------- ENTRADA ---------+------------------- SAIDA --------------+\n";
 	private static final String RODAPE =
-			   "+------------------------------------------------------------------------+\\n";
+			   "+------------------------------------------------------------------------+\n";
 	private Hashtable< String, List<Transacao> > registro = new Hashtable< String, List<Transacao> >();
 
 	public void novo_registro(String key, Transacao t){
