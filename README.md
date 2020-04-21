@@ -3,7 +3,7 @@ Um fluxo de caixa feito como atividade para aula de programação orientada a ob
 
 # Links para outras atividades
 * [AgendaWB](https://github.com/gfborges/agenda)
-* [Gerenciamento de Revisões](#)
+* [Gerenciamento de Revisões](https://github.com/gmendess/gerencimento-revisoes)
 * [Fluxo de caixa](https://github.com/gfborges/fluxo-de-caixa)
 
 # Autores
