@@ -77,10 +77,12 @@ public class Menu {
 		Endereco end = new Endereco(cidade, bairro, rua, numero, complemento);
 		Usuario user = new Usuario(login, senha, caixa, nome, email, tipo, tel, end);
 		
-		user.salvarCSV();
-		
-		if(usuario != null)
-			login(login, senha);
+		System.out.println(user);
+		if( confirmarS("Deseja cadastrar o cliente") ) {
+			user.salvarCSV();
+			if(usuario != null)
+				login(login, senha);
+		}
 	}
 	
 	public void ver_perfil() {
